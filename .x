@@ -22,7 +22,7 @@ do
 		b="${b%".$c"}"
 	done
 	case "$b" in
-	(''|*[^a-z0-9-]*)	printf 'NO: %q\n' "$a";;
+	(''|*[^a-zA-Z0-9.-]*)	printf 'NO: %q\n' "$a";;
 	(*)			touch "$TODO/clone/$b";;
 	esac
 done
@@ -36,9 +36,24 @@ printf '\n'
 } >&2
 }
 
-clone()	{ log init "$1"; git clone --mirror "$FROM$1.git"; }
-pull()	{ log pull "$1"; git remote update -p; }
-push()	{ log push "$1"; git push --mirror "$DEST$1.git"; }
+x()
+{
+{
+printf '[['
+printf ' %q' "$@"
+printf ']]'
+} >&2
+"$@"
+}
+
+GIT()
+{
+GIT_CONFIG_NOSYSTEM=true HOME=. XDG_CONFIG_HOME=. x git "$@"
+}
+
+clone()	{ log init "$1"; GIT clone --mirror "$FROM$1.git"; }
+pull()	{ log pull "$1"; GIT remote update -p; }
+push()	{ log push "$1"; GIT push --mirror "$DEST$1.git"; }
 
 wiki()
 {
