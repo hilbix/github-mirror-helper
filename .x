@@ -42,7 +42,7 @@ x()
 {
 printf '[['
 printf ' %q' "$@"
-printf ']]'
+printf ']]\n'
 } >&2
 "$@"
 }
