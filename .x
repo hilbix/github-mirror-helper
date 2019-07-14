@@ -8,7 +8,7 @@ EXTS=wiki
 
 cd "$(dirname -- "$0")" || exit
 
-[ -d "$TODO/fail" ] && mvatom -id "$TODO" "$TODO/fail/"*
+[ -d "$TODO/fail" ] && mvatom -id "$TODO" "$TODO/fail/"[^c]*
 mkdir -p "$TODO/clone" "$TODO/pull" "$TODO/push" "$TODO/wiki" "$FAIL"
 
 [ all = "$*" ] && set -- 'git/'*.git
@@ -116,4 +116,30 @@ do
 	rm -f "$a"
 done
 
-rmdir "$TODO/"* "$TODO"
+# Cleanup FAILs if in $EXTS
+if	[ -d "$TODO/fail" ]
+then
+	for a in $EXTS
+	do
+		for b in "$TODO/fail/clone/"*".$a"
+		do
+			[ -f "$b" ] && [ -f "$FAIL/${b##*/}" ] && rm -f "$b"
+		done
+	done
+	rmdir "$TODO/fail/"*
+fi
+
+rmdir "$TODO/"* "$TODO" && exit
+
+if	[ -d "$TODO/fail/push" ]
+then
+	printf '\nmissing repositories on %q:\n' "$DEST"
+	for a in "$TODO/fail/push/"*
+	do
+		printf '\t%q\n' "${a##*/}"
+	done
+	printf '\n'
+fi
+
+exit 1
+
