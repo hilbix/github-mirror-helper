@@ -15,7 +15,8 @@ mkdir -p "$TODO/clone" "$TODO/pull" "$TODO/push" "$TODO/wiki" "$FAIL"
 
 for a
 do
-	b="${a##*/}"
+	b="${a%/}"
+	b="${b##*/}"
 	b="${b%.git}"
 	for c in $EXTS
 	do
