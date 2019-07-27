@@ -11,7 +11,7 @@ cd "$(dirname -- "$0")" || exit
 [ -d "$TODO/fail" ] && mvatom -id "$TODO" "$TODO/fail/"*
 mkdir -p "$TODO/clone" "$TODO/pull" "$TODO/push" "$TODO/wiki" "$FAIL"
 
-[ all = "$*" ] && set -- 'git/'*.git
+[ .- = ".$*" ] && set -- 'git/'*.git
 
 for a
 do
