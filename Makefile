@@ -5,7 +5,7 @@ love:	all
 
 .PHONY:	all
 all:
-	./.x -
+	[ -d TODO ] && ./.x || ./.x -
 
 .PHONY:	show
 show:
