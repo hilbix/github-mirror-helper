@@ -217,7 +217,7 @@ then
 	done
 	printf '\n'
 	printf 'Hint: If you need to hack the remote name, do:\n'
-	printf 'while read repo dest; do ( cd %q/"$repo.git" && git config --local "url.$dest.insteadOf" %q/"$dest" ); done\n' "$WORK" "$DEST"
+	printf 'while read repo dest; do ( cd %q/"$repo.git" && git config --local "url.%q${dest##*/}.insteadOf" %q"$repo".git ); done\n' "$WORK" "$DEST" "$DEST"
 	printf 'To list those, do: make show\n'
 fi
 
