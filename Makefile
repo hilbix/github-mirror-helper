@@ -5,7 +5,7 @@ love:	all
 
 .PHONY:	all
 all:
-	[ -d TODO ] && ./.x || ./.x -
+	if [ -d TODO ]; then ./.x; else ./.x -; fi
 
 .PHONY:	show
 show:
