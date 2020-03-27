@@ -1,0 +1,3 @@
+[submodule "bashy"]
+	path = bashy
+	url = https://github.com/hilbix/bashy.git
