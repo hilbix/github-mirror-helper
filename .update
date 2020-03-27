@@ -1,0 +1,86 @@
+#!/bin/bash
+
+cd -- "$(dirname -- "$0")" || exit
+. bashy/boilerplate.inc '' || exit
+
+GITHUB=hilbix
+
+quick="$1"
+
+o mkdir -p web TODO/clone
+
+# -H 'If-None-Match: "7f3c23bb0c7dff2a78d4ab6ed23c63eb"'
+
+json()
+{
+unset "${!JSON_@}"
+JSON_true_=1
+JSON_false_=0
+. <(sed '1,/^[\r]*$/d' "$1" | sed -e '1s/^.*test(//' -e '$s/).*$//' | json2sh | tee "$1.json")
+}
+
+declare -A hadurl
+fetch()
+{
+# check if URL already fetched
+[ -z "${hadurl["$2"]}" ] || return 0
+
+# Set variables
+local URL="$2" DST TMP=web/tmp.tmp ARGS=()
+v DST md5chk -qd "$URL"
+DST="web/$DST.$1"
+
+# Check if we refetch
+[ -s "$DST" ] && json "$DST" && ARGS=(-H "If-None-Match: $JSON__0_meta_0_ETag")
+
+# Fetch $URL
+STDOUT fetching "$URL" "${ARGS[@]}"
+o rm -f "$TMP"
+{
+echo "$URL"
+[ -s "$DST" ] && [ -n "$quick" ] || o curl -qgis "${ARGS[@]}" -- "$URL"
+} >"$TMP" || OOPS io error
+
+sed '1,/^[\r]*$/d' "$TMP" | read && o cp -vf "$TMP" "$DST" || STDOUT unchanged
+hadurl["$URL"]=1
+
+json "$DST"
+# JSON__0_meta_0_Link_${X}__1_=
+for a in "${!JSON__0_meta_0_Link_@}"
+do
+	case "${a#JSON__0_meta_0_Link_*_}" in (_[0-9]_) urls+=("${!a}");; esac
+done
+# JSON__0_data_${X}_name
+# JSON__0_data_${X}_has__wiki
+for a in "${!JSON__0_data_@}"
+do
+	case "${a#JSON__0_data_*_}" in
+	(name)
+		NAME="${!a}"
+		[ -d "git/$NAME.git" ] || STDOUT got "$NAME" "($a)" || touch "TODO/clone/$NAME"
+		;;
+	(has__wiki)
+		[ 1 = "${!a}" ] && rm -vf "FAIL/$NAME.wiki"
+		;;
+	esac
+done
+}
+
+urls=()
+for a in web/*.web
+do
+	[ -s "$a" ] || continue
+	read -r URL <"$a" || return
+	fetch web "$URL"
+done
+
+[ 0 = "${#hadurl[@]}" ] && fetch ini "https://api.github.com/users/hilbix/repos?per_page=100&callback=test"
+
+for a in 1 2 3
+do
+	for b in "${urls[@]}"
+	do
+		fetch web "$b"
+	done
+done
+
