@@ -3,7 +3,7 @@
 cd -- "$(dirname -- "$0")" || exit
 . bashy/boilerplate.inc '' || exit
 
-GITHUB="$(git config --get github.user)" || OOPS git config --global --add github.user YOURUSER
+GITHUB="$(git config --get github.user)" || OOPS git config --add github.user YOURUSER
 
 quick="$1"
 
