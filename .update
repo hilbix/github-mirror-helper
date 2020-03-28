@@ -3,13 +3,11 @@
 cd -- "$(dirname -- "$0")" || exit
 . bashy/boilerplate.inc '' || exit
 
-GITHUB=hilbix
+GITHUB="$(git config --get github.user)" || OOPS git config --global --add github.user YOURUSER
 
 quick="$1"
 
 o mkdir -p web TODO/clone
-
-# -H 'If-None-Match: "7f3c23bb0c7dff2a78d4ab6ed23c63eb"'
 
 json()
 {
@@ -74,7 +72,7 @@ do
 	fetch web "$URL"
 done
 
-[ 0 = "${#hadurl[@]}" ] && fetch ini "https://api.github.com/users/hilbix/repos?per_page=100&callback=test"
+[ 0 = "${#hadurl[@]}" ] && fetch ini "https://api.github.com/users/$GITHUB/repos?per_page=100&callback=test"
 
 for a in 1 2 3
 do
