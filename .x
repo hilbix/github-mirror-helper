@@ -1,26 +1,22 @@
 #!/bin/bash
 
-# CONFIG START
+# always work in the current directory
+# XXX TODO XXX add some config to more easily work in a working directory?
+cd -- "$(dirname -- "$0")" || exit
+. bashy/boilerplate.inc '' || exit
 
-# Your FROM
-FROM='https://github.com/hilbix/'
-# Your TO
-DEST='githubmirror:hilbix/'
+GITHUB="$(git config --get github.user)" || OOPS git config --global --add github.user YOURUSER
 
+FROM="https://github.com/$GITHUB/"
+DEST="githubmirror:$GITHUB/"
 # How the Wiki is called (space separated list)
 EXTS=wiki
-
-# CONFIG END
 
 # common settings
 TODO=TODO
 FAIL=FAIL
 WORK=git
 SKIP=SKIP
-
-# always work in the current directory
-# XXX TODO XXX add some config to more easily work in a working directory?
-cd "$(dirname -- "$0")" || exit
 
 # Start the mirroring
 # Create runtime directories (will be removed again if empty)
@@ -220,8 +216,8 @@ then
 	done
 	printf '\n'
 	printf 'Hint: If you need to hack the remote name, do:\n'
-	printf 'while read repo dest; do ( repo="${repo%%/}"; repo="${repo%%.git}"; repo="${repo%%%%*/}"; cd %q/"$repo.git" && git config --local "url.%q${dest##*/}.insteadOf" %q"$repo".git ); done\n' "$WORK" "$DEST" "$DEST"
-	printf 'To list those, do: make show\n'
+	printf 'while read -p "githubreponame mirrorreponame: " repo dest; do ( repo="${repo%%/}"; repo="${repo%%.git}"; repo="${repo%%%%*/}"; cd %q/"$repo.git" && git config --local "url.%q${dest##*/}.insteadOf" %q"$repo".git ); done\n' "$WORK" "$DEST" "$DEST"
+	printf 'To list the already known mapping, do: make show\n'
 fi
 
 exit 1
