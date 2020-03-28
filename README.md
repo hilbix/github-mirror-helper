@@ -31,10 +31,10 @@ Mirrors all public GitHub repos of one account to some other `git` (named `gitmi
 Data is written into `git/` and some other directories directly where this
 repo is.  A typical update run looks like (yes, both doubled) this:
 
-	github-mirror-helper/.update
-	github-mirror-helper/.update
-	github-mirror-helper/.x
-	github-mirror-helper/.x
+	make -C github-mirror-helper update
+	make -C github-mirror-helper update
+	make -C github-mirror-helper
+	make -C github-mirror-helper
 
 If you see some failures fix them and then rerun `./.x`.
 
