@@ -5,7 +5,7 @@
 cd -- "$(dirname -- "$0")" || exit
 . bashy/boilerplate.inc '' || exit
 
-GITHUB="$(git config --get github.user)" || OOPS git config --global --add github.user YOURUSER
+GITHUB="$(git config --get github.user)" || OOPS git config --add github.user YOURUSER
 
 FROM="https://github.com/$GITHUB/"
 DEST="githubmirror:$GITHUB/"
@@ -209,15 +209,15 @@ rmdir "$TODO/"* "$TODO" && exit
 # Remember to create a missing destination
 if	[ -d "$TODO/fail/push" ]
 then
-	printf '\nmissing repositories on %q:\n' "$DEST"
+	printf '\nmissing/unreachable repositories on %q:\n' "$DEST"
 	for a in "$TODO/fail/push/"*
 	do
 		printf '\t%q\n' "${a##*/}"
 	done
 	printf '\n'
 	printf 'Hint: If you need to hack the remote name, do:\n'
-	printf 'while read -p "githubreponame mirrorreponame: " repo dest; do ( repo="${repo%%/}"; repo="${repo%%.git}"; repo="${repo%%%%*/}"; cd %q/"$repo.git" && git config --local "url.%q${dest##*/}.insteadOf" %q"$repo".git ); done\n' "$WORK" "$DEST" "$DEST"
-	printf 'To list the already known mapping, do: make show\n'
+	printf 'cd %q && while read -p "githubreponame mirrorreponame: " repo dest; do ( repo="${repo%%/}"; repo="${repo%%.git}"; repo="${repo%%%%*/}"; cd %q/"$repo.git" && git config --local "url.%q${dest##*/}.insteadOf" %q"$repo".git ); done\n' "$PWD" "$WORK" "$DEST" "$DEST"
+	printf 'To list the already known mapping, do: make -C %q show\n' "$PWD"
 fi
 
 exit 1
