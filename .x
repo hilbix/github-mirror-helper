@@ -42,7 +42,7 @@ do
 		b="${b%".$c"}"
 	done
 	case "$b" in
-	(''|*[^a-zA-Z0-9.-_]*)	printf 'NO: %q\n' "$a";;
+	(''|*[^a-zA-Z0-9._-]*)	printf 'NO: %q\n' "$a";;
 	(*)			touch "$TODO/clone/$b";;
 	esac
 done
