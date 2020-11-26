@@ -101,3 +101,9 @@ Can the path on the remote differ from the GitHub account name?
 - Perhaps you can use some general `git` rewriting (`git config url.xxx.insteadOf yyy`) somehow,
   but I did not test it.
 
+`make love`?
+
+- Yeah, baby!  Love is all you need!
+- Because `make all` seems to be a bit blasphemic and `make war` far too violent.
+- So that's the way, I like it!
+
